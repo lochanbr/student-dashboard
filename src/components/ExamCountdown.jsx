@@ -9,7 +9,8 @@ function timeLeft(deadline){
   const days = Math.floor(d / (1000*60*60*24))
   const hours = Math.floor((d % (1000*60*60*24)) / (1000*60*60))
   const minutes = Math.floor((d % (1000*60*60)) / (1000*60))
-  return {days,hours,minutes,passed:false}
+  const seconds = Math.floor((d % (1000*60)) / 1000)
+  return {days,hours,minutes,seconds,passed:false}
 }
 
 export default function ExamCountdown(){
@@ -20,10 +21,11 @@ export default function ExamCountdown(){
   const [date, setDate] = useState('')
 
   useEffect(()=>{ localStorage.setItem(STORAGE_KEY, JSON.stringify(items)) },[items])
-  useEffect(()=>{ const t = setInterval(()=>setItems(i=>[...i]), 60*1000); return ()=>clearInterval(t) },[])
+  // update every second to show seconds ticking down
+  useEffect(()=>{ const t = setInterval(()=>setItems(i=>[...i]), 1000); return ()=>clearInterval(t) },[])
 
   function add(){ if(!title||!date) return; setItems([{id:Date.now(), title, date}, ...items]); setTitle(''); setDate('') }
-  function remove(id){ setItems(items.filter(i=>i.id!==id)) }
+  function remove(id){ if(!window.confirm('Remove this exam?')) return; setItems(items.filter(i=>i.id!==id)) }
 
   return (
     <div className="exams-root">
@@ -32,23 +34,27 @@ export default function ExamCountdown(){
         <input type="datetime-local" value={date} onChange={e=>setDate(e.target.value)} />
         <button onClick={add}>Add</button>
       </div>
-      <ul className="exam-list">
-        {items.map(it=>{
-          const t = timeLeft(it.date)
-          return (
-            <li key={it.id} className="exam-item">
-              <div className="left">
-                <div className="title">{it.title}</div>
-                <div className="when">{it.date}</div>
-              </div>
-              <div className="countdown">
-                {t.passed ? <span className="passed">Passed</span> : <span>{t.days}d {t.hours}h</span>}
-              </div>
-              <button onClick={()=>remove(it.id)}>✕</button>
-            </li>
-          )
-        })}
-      </ul>
+      {items.length === 0 ? (
+        <div className="muted">No upcoming exams! Relax.</div>
+      ) : (
+        <ul className="exam-list">
+          {items.map(it=>{
+            const t = timeLeft(it.date)
+            return (
+              <li key={it.id} className="exam-item">
+                <div className="left">
+                  <div className="title">{it.title}</div>
+                  <div className="when">{it.date}</div>
+                </div>
+                <div className="countdown">
+                  {t.passed ? <span className="passed">Passed</span> : <span>{t.days}d {t.hours}h {t.minutes}m {t.seconds}s</span>}
+                </div>
+                <button onClick={()=>remove(it.id)}>✕</button>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }

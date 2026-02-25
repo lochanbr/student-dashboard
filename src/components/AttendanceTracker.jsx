@@ -17,11 +17,17 @@ function allowedMisses(attended, total, threshold){
 
 // if below threshold, returns minimum classes to attend consecutively to reach threshold
 function neededToReach(attended, total, threshold){
-  if((attended/total) >= threshold) return 0
+  if(total === 0) return 0
+  const current = attended / total
+  if(current >= threshold) return 0
+  // If threshold is 1 (100%), it's impossible if any class has been missed
+  if(threshold >= 1){
+    if(attended < total) return -1 // sentinel: impossible to reach 100%
+    return 0
+  }
   // solve for y: (attended + y)/(total + y) >= threshold
   const num = threshold*total - attended
   const denom = 1 - threshold
-  if(denom <= 0) return Infinity
   return Math.ceil(num / denom)
 }
 
@@ -59,6 +65,7 @@ export default function AttendanceTracker(){
   }
 
   function removeSubject(id){
+    if(!window.confirm('Remove this subject? This action cannot be undone.')) return
     setItems(items.filter(it=>it.id!==id))
   }
 
@@ -84,8 +91,10 @@ export default function AttendanceTracker(){
               <div className="meta">
                 <div>Attendance: {pct.toFixed(1)}%</div>
                 { (it.total===0) ? <div className="muted">No classes yet</div> : (
-                  allowed > 0 ? <div className="ok">You can miss {allowed} more class(es)</div>
-                  : (pct >= threshold*100 ? <div className="ok">On track</div> : <div className="warn">Attend next {needed} class(es) to reach {Math.round(threshold*100)}%</div>)
+                  needed === -1 ? <div className="warn">100% attendance no longer possible</div> : (
+                    allowed > 0 ? <div className="ok">You can miss {allowed} more class(es)</div>
+                    : (pct >= threshold*100 ? <div className="ok">On track</div> : <div className="warn">Attend next {needed} class(es) to reach {Math.round(threshold*100)}%</div>)
+                  )
                 )}
               </div>
               <button className="remove" onClick={()=>removeSubject(it.id)}>Remove</button>

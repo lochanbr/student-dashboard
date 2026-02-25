@@ -1,14 +1,30 @@
-:root{
-  --bg: #0f1724;
-  --card: rgba(255,255,255,0.06);
-  --glass: rgba(255,255,255,0.04);
-  --accent: #6ee7b7;
-  --muted: #9aa4b2;
+/* Ensure all form controls are interactable and visible */
+input, select, textarea, button {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+  cursor: text;
+}
+button { cursor: pointer; }
+
+:root {
+  --bg: #f8fafc;           /* Light background */
+  --bg-gradient: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  --card: rgba(255, 255, 255, 0.8);
+  --glass: rgba(255, 255, 255, 0.5);
+  --text: #1e293b;         /* Dark text for light mode */
+  --accent: #10b981;
+  --muted: #64748b;
+  --border: rgba(0, 0, 0, 0.05);
 }
 
-:root.dark{
-  --bg: #051022;
-  --card: rgba(255,255,255,0.03);
+:root.dark {
+  --bg: #051022;           /* Dark background */
+  --bg-gradient: linear-gradient(180deg, #071129 0%, #071b2a 100%);
+  --card: rgba(255, 255, 255, 0.03);
+  --glass: rgba(255, 255, 255, 0.04);
+  --text: #e6eef6;         /* Light text for dark mode */
+  --border: rgba(255, 255, 255, 0.04);
 }
 
 *{box-sizing:border-box}
@@ -16,11 +32,11 @@ html,body,#root{height:100%;}
 body{
   margin:0;
   font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;
-  background: linear-gradient(180deg, #071129 0%, #071b2a 100%);
-  color:#e6eef6;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  background: var(--bg-gradient); /* Use the variable here */
+  color: var(--text);             /* Use the variable here */
   padding:18px;
+  min-height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .app-header{
@@ -35,12 +51,14 @@ body{
 }
 
 .card{
-  background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  background: var(--card);        /* Use the variable here */
+  border: 1px solid var(--border); /* Use the variable here */
+  backdrop-filter: blur(6px) saturate(120%);
   border-radius:12px;
   padding:12px;
-  backdrop-filter: blur(6px) saturate(120%);
-  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
-  border: 1px solid rgba(255,255,255,0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .card.fullwidth{ grid-column: 1 / -1 }
@@ -52,8 +70,26 @@ body{
 /* Timetable */
 .timetable-table{ width:100%; border-collapse:collapse }
 .timetable-table th, .timetable-table td{ padding:6px; border-bottom:1px solid rgba(255,255,255,0.02) }
-.timetable-table input{ width:100%; background:transparent; color:inherit; border:0; outline:none }
-.slot-label{ width:68px; font-size:0.85rem; color:var(--muted) }
+.timetable-table input{
+  width: 100%;             /* Fills the remaining space */
+  background: transparent;  /* Matches your glass design */
+  color: inherit;          /* Follows theme colors */
+  border: 0;               /* Removes default borders */
+  outline: none;           /* Cleaner look on focus */
+  padding: 4px;            /* Adds a small buffer inside the cell */
+}
+.timetable-table input:focus {
+  border-bottom: 1px solid var(--accent);
+  background: rgba(255,255,255,0.05);
+}
+.slot-label {
+  width: 120px;            /* Increased width for even longer times */
+  font-size: 1rem;         /* Larger font for visibility */
+  color: var(--muted);     /* Uses your established muted color */
+  padding: 8px 6px;        /* Consistent padding */
+  text-align: center;      /* Centers the text for better visibility */
+  white-space: nowrap;     /* Prevents the time from wrapping to a second line */
+}
 
 /* Assignment */
 .assign-root .add-row{ display:flex; gap:8px; margin-bottom:8px }
