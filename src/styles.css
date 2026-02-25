@@ -1,0 +1,95 @@
+:root{
+  --bg: #0f1724;
+  --card: rgba(255,255,255,0.06);
+  --glass: rgba(255,255,255,0.04);
+  --accent: #6ee7b7;
+  --muted: #9aa4b2;
+}
+
+:root.dark{
+  --bg: #051022;
+  --card: rgba(255,255,255,0.03);
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%;}
+body{
+  margin:0;
+  font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;
+  background: linear-gradient(180deg, #071129 0%, #071b2a 100%);
+  color:#e6eef6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:18px;
+}
+
+.app-header{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:16px
+}
+.app-header h1{margin:0;font-size:1.25rem}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:16px;
+}
+
+.card{
+  background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:12px;
+  padding:12px;
+  backdrop-filter: blur(6px) saturate(120%);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+.card.fullwidth{ grid-column: 1 / -1 }
+
+/* Responsive */
+@media (max-width: 1000px){ .dashboard-grid{ grid-template-columns: repeat(2,1fr) } }
+@media (max-width: 640px){ .dashboard-grid{ grid-template-columns: 1fr } }
+
+/* Timetable */
+.timetable-table{ width:100%; border-collapse:collapse }
+.timetable-table th, .timetable-table td{ padding:6px; border-bottom:1px solid rgba(255,255,255,0.02) }
+.timetable-table input{ width:100%; background:transparent; color:inherit; border:0; outline:none }
+.slot-label{ width:68px; font-size:0.85rem; color:var(--muted) }
+
+/* Assignment */
+.assign-root .add-row{ display:flex; gap:8px; margin-bottom:8px }
+.assign-root input[type="text"], .add-row input{ flex:1; padding:6px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); background:transparent }
+.assign-list{ list-style:none; padding:0; margin:0 }
+.assign-item{ display:flex; justify-content:space-between; padding:8px; align-items:center; border-radius:8px; margin-bottom:6px }
+.assign-item.done{ opacity:0.6; text-decoration:line-through }
+.assign-item .prio{ font-size:0.8rem; padding:4px 6px; border-radius:6px }
+.assign-item.high .prio{ background:#ffb4b4; color:#4a0707 }
+.assign-item.medium .prio{ background:#ffdca3; color:#3e2f00 }
+.assign-item.low .prio{ background:#c9f7e4; color:#06472b }
+
+/* Attendance */
+.attendance-root .threshold-row{ display:flex; gap:12px; align-items:center; margin-bottom:8px }
+.attendance-item{ display:grid; grid-template-columns: 1fr auto; gap:8px; align-items:center; padding:10px; border-radius:8px; margin-bottom:8px; background:var(--glass) }
+.attendance-item .counts label{ margin-right:8px }
+.attendance-item .meta{ font-size:0.9rem; color:var(--muted) }
+.attendance-item .ok{ color:var(--accent) }
+.attendance-item .warn{ color:#ff9aa2 }
+.attendance-item .remove{ background:transparent;border:0;color:var(--muted) }
+.subj-name{ font-weight:600; background:transparent; border:0; color:inherit }
+
+/* Exams */
+.exams-root .add-row{ display:flex; gap:8px; margin-bottom:8px }
+.exam-list{ list-style:none; padding:0; margin:0 }
+.exam-item{ display:flex; gap:8px; align-items:center; justify-content:space-between; padding:8px; border-radius:8px; background:var(--glass); margin-bottom:6px }
+.exam-item .when{ color:var(--muted); font-size:0.85rem }
+.passed{ color:#bbb }
+
+/* Notes */
+.notes-root{ display:flex; gap:8px }
+.notes-root textarea{ flex:1; min-height:120px; padding:10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.04); color:inherit }
+.notes-root .preview{ flex:1; padding:10px; min-height:120px; border-radius:8px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03) }
+
+.app-footer{ margin-top:12px; color:var(--muted); font-size:0.9rem }
+
+/* small niceties */
+button{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:inherit; padding:6px 8px; border-radius:8px }
+input[type=number]{ width:80px }
