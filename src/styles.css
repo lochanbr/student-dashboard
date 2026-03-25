@@ -1,5 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
 
+/* Keyframe animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 /* Ensure all form controls are interactable and visible */
 input, select, textarea, button {
   position: relative;
@@ -12,6 +42,8 @@ button { cursor: pointer; }
 :root {
   --bg: #ffffff;
   --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --bg-pattern: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.05) 0%, transparent 50%);
   --card: rgba(255, 255, 255, 0.9);
   --glass: rgba(255, 255, 255, 0.7);
   --text: #2d3748;
@@ -20,11 +52,16 @@ button { cursor: pointer; }
   --border: rgba(0, 0, 0, 0.1);
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --animation-duration: 0.3s;
+  --animation-timing: ease;
+  --entrance-delay: 0.1s;
 }
 
 :root.dark {
   --bg: #1a202c;
   --bg-gradient: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+  --bg-pattern: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(0, 0, 0, 0.1) 0%, transparent 50%);
   --card: rgba(255, 255, 255, 0.05);
   --glass: rgba(255, 255, 255, 0.08);
   --text: #f7fafc;
@@ -41,10 +78,23 @@ body{
   margin:0;
   font-family: 'Inter', sans-serif;
   background: var(--bg-gradient);
+  background-attachment: fixed;
   color: var(--text);
   padding:24px;
   min-height: 100vh;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background var(--animation-duration) var(--animation-timing), color var(--animation-duration) var(--animation-timing);
+  position: relative;
+}
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-pattern);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .app-header{
@@ -53,21 +103,27 @@ body{
   align-items:center;
   margin-bottom:32px;
   padding:20px 24px;
-  background: var(--card);
+  background: linear-gradient(135deg, var(--card) 0%, var(--glass) 100%);
   border-radius:16px;
   box-shadow: var(--shadow);
   border: 1px solid var(--border);
-  backdrop-filter: blur(10px) saturate(120%);
-  transition: box-shadow 0.3s ease;
+  backdrop-filter: blur(20px) saturate(150%);
+  transition: box-shadow var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
+  animation: fadeInUp var(--animation-duration) var(--animation-timing) forwards;
 }
 .app-header:hover {
   box-shadow: var(--hover-shadow);
+  transform: translateY(-2px);
 }
 .app-header h1{
   margin:0;
   font-size:1.5rem;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .dashboard-grid{
@@ -79,29 +135,50 @@ body{
 .card{
   background: var(--card);
   border: 1px solid var(--border);
-  backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(20px) saturate(150%);
   border-radius:16px;
   padding:24px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition: box-shadow var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
+  animation: fadeInUp var(--animation-duration) var(--animation-timing) calc(var(--entrance-delay) * var(--index, 0)) forwards;
+  opacity: 0;
 }
 .card:hover {
   box-shadow: var(--hover-shadow);
-  transform: translateY(-4px);
+  transform: translateY(-6px) scale(1.02);
 }
+.card:nth-child(1) { --index: 1; }
+.card:nth-child(2) { --index: 2; }
+.card:nth-child(3) { --index: 3; }
+.card:nth-child(4) { --index: 4; }
+.card:nth-child(5) { --index: 5; }
 
 .card.fullwidth{ grid-column: 1 / -1 }
 
 /* Responsive */
-@media (max-width: 1000px){ .dashboard-grid{ grid-template-columns: repeat(2,1fr) } }
-@media (max-width: 640px){ .dashboard-grid{ grid-template-columns: 1fr } }
+@media (max-width: 1000px){
+  .dashboard-grid{ grid-template-columns: repeat(2,1fr) }
+  .card:nth-child(odd) { --index: 1; }
+  .card:nth-child(even) { --index: 2; }
+}
+@media (max-width: 640px){
+  .dashboard-grid{ grid-template-columns: 1fr }
+  .card { --index: 1; }
+}
 
 /* Timetable */
 .timetable-table{ width:100%; border-collapse:collapse }
-.timetable-table th, .timetable-table td{ padding:12px; border-bottom:1px solid var(--border) }
+.timetable-table th, .timetable-table td{
+  padding:12px;
+  border-bottom:1px solid var(--border);
+  transition: background var(--animation-duration) var(--animation-timing);
+}
+.timetable-table tr:hover {
+  background: var(--glass);
+}
 .timetable-table input{
   width: 100%;
   background: transparent;
@@ -110,11 +187,12 @@ body{
   outline: none;
   padding: 8px 12px;
   border-radius: 8px;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color var(--animation-duration) var(--animation-timing), background var(--animation-duration) var(--animation-timing), box-shadow var(--animation-duration) var(--animation-timing);
 }
 .timetable-table input:focus {
   border-color: var(--accent);
   background: var(--glass);
+  box-shadow: 0 0 0 3px rgba(49, 140, 206, 0.1);
 }
 .slot-label {
   width: 140px;
@@ -135,11 +213,12 @@ body{
   border:1px solid var(--border);
   background: var(--glass);
   color: inherit;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color var(--animation-duration) var(--animation-timing), background var(--animation-duration) var(--animation-timing), box-shadow var(--animation-duration) var(--animation-timing);
 }
 .assign-root input[type="text"]:focus, .add-row input:focus {
   border-color: var(--accent);
   background: var(--card);
+  box-shadow: 0 0 0 3px rgba(49, 140, 206, 0.1);
 }
 .assign-list{ list-style:none; padding:0; margin:0 }
 .assign-item{
@@ -150,17 +229,29 @@ body{
   border-radius:8px;
   margin-bottom:12px;
   background: var(--glass);
-  transition: background 0.3s ease;
+  transition: background var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
+  cursor: pointer;
 }
 .assign-item:hover {
   background: var(--card);
+  transform: translateX(4px);
 }
-.assign-item.done{ opacity:0.6; text-decoration:line-through }
+.assign-item.done{
+  opacity:0.6;
+  text-decoration:line-through;
+  background: linear-gradient(90deg, transparent 0%, rgba(56, 161, 105, 0.1) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
 .assign-item .prio{
   font-size:0.85rem;
   padding:6px 12px;
-  border-radius:6px;
+  border-radius:20px;
   font-weight: 500;
+  transition: transform var(--animation-duration) var(--animation-timing);
+}
+.assign-item .prio:hover {
+  transform: scale(1.1);
 }
 .assign-item.high .prio{ background:#e53e3e; color:#ffffff }
 .assign-item.medium .prio{ background:#dd6b20; color:#ffffff }
@@ -177,26 +268,36 @@ body{
   border-radius:8px;
   margin-bottom:12px;
   background:var(--glass);
-  transition: background 0.3s ease;
+  transition: background var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
 }
 .attendance-item:hover {
   background: var(--card);
+  transform: translateX(4px);
 }
 .attendance-item .counts label{ margin-right:12px }
 .attendance-item .meta{ font-size:0.9rem; color:var(--muted) }
-.attendance-item .ok{ color:#38a169; font-weight: 600 }
-.attendance-item .warn{ color:#e53e3e; font-weight: 600 }
+.attendance-item .ok{
+  color:#38a169;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
+.attendance-item .warn{
+  color:#e53e3e;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
 .attendance-item .remove{
   background:transparent;
   border:1px solid var(--border);
   color:var(--muted);
   padding:8px 12px;
   border-radius:6px;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background var(--animation-duration) var(--animation-timing), color var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
 }
 .attendance-item .remove:hover {
   background: var(--accent);
   color: white;
+  transform: scale(1.05);
 }
 .subj-name{
   font-weight:600;
@@ -205,10 +306,11 @@ body{
   color:inherit;
   padding:8px 12px;
   border-radius:6px;
-  transition: border-color 0.3s ease;
+  transition: border-color var(--animation-duration) var(--animation-timing), box-shadow var(--animation-duration) var(--animation-timing);
 }
 .subj-name:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(49, 140, 206, 0.1);
 }
 
 /* Exams */
@@ -223,13 +325,18 @@ body{
   border-radius:8px;
   background:var(--glass);
   margin-bottom:12px;
-  transition: background 0.3s ease;
+  transition: background var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
 }
 .exam-item:hover {
   background: var(--card);
+  transform: translateX(4px);
 }
 .exam-item .when{ color:var(--muted); font-size:0.9rem }
-.passed{ color:#a0aec0 }
+.passed{
+  color:#a0aec0;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
 
 /* Notes */
 .notes-root{ display:flex; gap:16px }
@@ -241,11 +348,13 @@ body{
   background:var(--glass);
   border:1px solid var(--border);
   color:inherit;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color var(--animation-duration) var(--animation-timing), background var(--animation-duration) var(--animation-timing), box-shadow var(--animation-duration) var(--animation-timing);
+  resize: vertical;
 }
 .notes-root textarea:focus {
   border-color: var(--accent);
   background: var(--card);
+  box-shadow: 0 0 0 3px rgba(49, 140, 206, 0.1);
 }
 .notes-root .preview{
   flex:1;
@@ -254,9 +363,18 @@ body{
   border-radius:8px;
   background:var(--glass);
   border:1px solid var(--border);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
-.app-footer{ margin-top:24px; color:var(--muted); font-size:0.9rem; text-align: center }
+.app-footer{
+  margin-top:24px;
+  color:var(--muted);
+  font-size:0.9rem;
+  text-align: center;
+  animation: fadeInUp var(--animation-duration) var(--animation-timing) 1s forwards;
+  opacity: 0;
+}
 
 /* small niceties */
 button{
@@ -266,13 +384,60 @@ button{
   padding:10px 16px;
   border-radius:8px;
   font-weight: 500;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition: background var(--animation-duration) var(--animation-timing), transform 0.2s var(--animation-timing), box-shadow var(--animation-duration) var(--animation-timing);
+  position: relative;
+  overflow: hidden;
+}
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+button:hover::before {
+  left: 100%;
 }
 button:hover {
   background: var(--accent);
   transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(49, 140, 206, 0.3);
 }
 button:active {
   transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(49, 140, 206, 0.2);
 }
-input[type=number]{ width:100px }
+input[type=number]{
+  width:100px;
+  padding:8px 12px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background: var(--glass);
+  color: inherit;
+  transition: border-color var(--animation-duration) var(--animation-timing);
+}
+input[type=number]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(49, 140, 206, 0.1);
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible for better accessibility */
+input:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+.subj-name:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
