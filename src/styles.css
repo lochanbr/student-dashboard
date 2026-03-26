@@ -258,11 +258,27 @@ body::before {
 }
 
 /* Timetable */
-.timetable-table{ width:100%; border-collapse:collapse }
-.timetable-table th, .timetable-table td{
-  padding:12px;
-  border-bottom:1px solid var(--border);
+.timetable-root {
+  width: 100%;
+  min-width: 320px;
+  margin: 0 auto;
+  overflow-x: auto;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.timetable-table { width: 100%; min-width: 900px; border-collapse: collapse; table-layout: fixed; }
+.timetable-table th, .timetable-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
   transition: background var(--animation-duration) var(--animation-timing);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .timetable-table tr:hover {
   background: var(--glass);
