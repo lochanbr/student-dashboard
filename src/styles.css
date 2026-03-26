@@ -72,6 +72,34 @@ button { cursor: pointer; }
   --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
 }
 
+:root[data-palette='ocean'] {
+  --bg-gradient: linear-gradient(135deg, #d4f1ff 0%, #a0d8ff 45%, #70b6ff 100%);
+  --card: rgba(240, 249, 255, 0.8);
+  --glass: rgba(255, 255, 255, 0.55);
+  --accent: #2b6cb0;
+  --muted: #2a4365;
+  --border: rgba(66, 153, 225, 0.3);
+}
+
+:root[data-palette='sunset'] {
+  --bg-gradient: linear-gradient(135deg, #fff2e5 0%, #ffcb9a 45%, #f47f5e 100%);
+  --card: rgba(255, 248, 242, 0.9);
+  --glass: rgba(255, 255, 255, 0.62);
+  --accent: #ed8936;
+  --muted: #794c28;
+  --border: rgba(237, 137, 54, 0.25);
+}
+
+:root[data-palette='forest'] {
+  --bg-gradient: linear-gradient(135deg, #eafaf1 0%, #c6f7e6 45%, #68d391 100%);
+  --card: rgba(245, 255, 250, 0.9);
+  --glass: rgba(255, 255, 255, 0.7);
+  --accent: #2f855a;
+  --muted: #276749;
+  --border: rgba(72, 187, 120, 0.25);
+}
+
+
 *{box-sizing:border-box}
 html,body,#root{height:100%;}
 body{
@@ -98,6 +126,7 @@ body::before {
 }
 
 .app-header{
+  position: relative;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -111,6 +140,28 @@ body::before {
   transition: box-shadow var(--animation-duration) var(--animation-timing), transform var(--animation-duration) var(--animation-timing);
   animation: fadeInUp var(--animation-duration) var(--animation-timing) forwards;
 }
+
+.app-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 15% 15%, rgba(99, 179, 237, 0.28), transparent 30%),
+              radial-gradient(circle at 85% 30%, rgba(237, 137, 54, 0.24), transparent 28%),
+              radial-gradient(circle at 50% 75%, rgba(72, 187, 120, 0.18), transparent 25%);
+  opacity: 0.82;
+  filter: blur(1px);
+  transform: scale(1.05);
+  animation: floatGlow 12s ease-in-out infinite;
+}
+
+@keyframes floatGlow {
+  0%, 100% { transform: translate(0,0) scale(1.05); }
+  25% { transform: translate(14px,-8px) scale(1.06); }
+  50% { transform: translate(-10px,10px) scale(1.04); }
+  75% { transform: translate(6px,6px) scale(1.05); }
+}
+
 .app-header:hover {
   box-shadow: var(--hover-shadow);
   transform: translateY(-2px);
@@ -124,6 +175,43 @@ body::before {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.theme-toggle{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.theme-toggle-label{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.theme-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.palette-button{
+  border: 1px solid var(--border);
+  background: var(--glass);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: transform var(--animation-duration) var(--animation-timing), box-shadow var(--animation-duration) var(--animation-timing), background var(--animation-duration) var(--animation-timing);
+}
+
+.palette-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
 }
 
 .dashboard-grid{
@@ -438,7 +526,6 @@ body::before {
 .card.notes { border-left: 6px solid #ed8936; }
 .card.timetable { border-left: 6px solid #805ad5; }
 
-}
 .subj-name{
   font-weight:600;
   background:transparent;
