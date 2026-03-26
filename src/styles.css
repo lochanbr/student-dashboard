@@ -262,7 +262,7 @@ body::before {
   width: 100%;
   min-width: 320px;
   margin: 0 auto;
-  overflow-x: auto;
+  overflow-x: hidden;
   padding: 12px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.15);
@@ -271,14 +271,46 @@ body::before {
   backdrop-filter: blur(10px);
 }
 
-.timetable-table { width: 100%; min-width: 900px; border-collapse: collapse; table-layout: fixed; }
-.timetable-table th, .timetable-table td {
+.timetable-table {
+  width: 100%;
+  min-width: auto;
+  border-collapse: collapse;
+  table-layout: auto;
+  display: grid;
+  grid-template-columns: minmax(90px, 120px) repeat(6, minmax(100px, 1fr));
+  gap: 4px;
+}
+
+.timetable-table thead,
+.timetable-table tbody,
+.timetable-table tr {
+  display: contents;
+}
+
+.timetable-table th,
+.timetable-table td {
   padding: 12px;
   border-bottom: 1px solid var(--border);
   transition: background var(--animation-duration) var(--animation-timing);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-align: center;
+}
+
+.timetable-table th {
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.timetable-table td {
+  min-height: 52px;
+}
+
+.timetable-table td input,
+.timetable-table th input,
+.timetable-table td .slot-label input {
+  max-width: 96%;
 }
 .timetable-table tr:hover {
   background: var(--glass);
