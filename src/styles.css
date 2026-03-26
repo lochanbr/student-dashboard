@@ -277,7 +277,7 @@ body::before {
   border-collapse: collapse;
   table-layout: auto;
   display: grid;
-  grid-template-columns: minmax(90px, 120px) repeat(6, minmax(100px, 1fr));
+  grid-template-columns: minmax(90px, 120px) repeat(7, minmax(100px, 1fr));
   gap: 4px;
 }
 

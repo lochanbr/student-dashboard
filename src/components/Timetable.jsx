@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 
 const STORAGE_KEY = 'ssd:timetable:v1'
 const SLOTS_KEY = 'ssd:slots:v1'
-const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat']
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
 const DEFAULT_SLOTS = ['08:00','10:00','12:00','14:00','16:00']
 
 export default function Timetable(){
