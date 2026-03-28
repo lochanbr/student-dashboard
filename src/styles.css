@@ -262,13 +262,23 @@ body::before {
   width: 100%;
   min-width: 320px;
   margin: 0 auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   padding: 12px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid var(--border);
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   backdrop-filter: blur(10px);
+}
+
+.timetable-table {
+  width: 100%;
+  min-width: max-content;
+  border-collapse: collapse;
+  table-layout: auto;
+  display: grid;
+  grid-template-columns: minmax(90px, 140px) repeat(7, minmax(80px, 1fr));
+  gap: 6px;
 }
 
 .timetable-table {
