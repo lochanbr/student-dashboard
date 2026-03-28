@@ -277,8 +277,8 @@ body::before {
   border-collapse: collapse;
   table-layout: auto;
   display: grid;
-  grid-template-columns: minmax(90px, 120px) repeat(7, minmax(100px, 1fr));
-  gap: 4px;
+  grid-template-columns: minmax(110px, 160px) repeat(7, minmax(130px, 1fr));
+  gap: 6px;
 }
 
 .timetable-table thead,
@@ -289,7 +289,7 @@ body::before {
 
 .timetable-table th,
 .timetable-table td {
-  padding: 12px;
+  padding: 14px;
   border-bottom: 1px solid var(--border);
   transition: background var(--animation-duration) var(--animation-timing);
   white-space: normal;
@@ -304,7 +304,7 @@ body::before {
 }
 
 .timetable-table td {
-  min-height: 52px;
+  min-height: 74px;
 }
 
 .timetable-table td input,
